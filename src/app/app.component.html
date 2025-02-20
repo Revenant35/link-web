@@ -1,37 +1,7 @@
 <div class="chat-container">
   <div class="chat-messages">
     @for (message of messages; track message.id) {
-      <div class="message">
-        <div class="message-sender" [style.color]="message.color">
-          {{ message.sender }}
-        </div>
-        <div class="message-content">
-          {{ message.content }}
-        </div>
-        @if (message.file) {
-          <div class="message-media">
-            @switch (message.file.type) {
-              @case ('image') {
-                <img [src]="message.file.url" [alt]="message.file.name">
-              }
-              @case ('video') {
-                <video controls>
-                  <source [src]="message.file.url" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              }
-              @case ('file') {
-                <div class="message-file">
-                  <mat-icon>attach_file</mat-icon>
-                  <a [href]="message.file.url" [download]="message.file.name">
-                    {{ message.file.name }}
-                  </a>
-                </div>
-              }
-            }
-          </div>
-        }
-      </div>
+      <app-chat-message [message]="message"></app-chat-message>
     }
   </div>
 
@@ -69,7 +39,7 @@
       <div class="upload-preview">
         @switch (attachment.type) {
           @case ('image') {
-            <img [src]="attachment.imagePreviewUrl" alt="Upload preview">
+            <img [src]="attachment.url" alt="Upload preview">
           }
           @default {
             <span>{{ attachment.name }}</span>

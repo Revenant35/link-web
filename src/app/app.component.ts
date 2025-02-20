@@ -1,5 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {Component, OnInit} from '@angular/core';
+import {SafeUrl} from '@angular/platform-browser';
 import {MatFormField, MatPrefix} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
@@ -7,18 +7,8 @@ import {MatInput} from '@angular/material/input';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {AttachmentButtonComponent} from './attachment-button/attachment-button.component';
 import {Attachment, AttachmentsUploadedEvent, ImagePreviewLoadedEvent} from './models/attachment';
-
-interface ChatMessage {
-  id: number;
-  sender: string;
-  content: string;
-  color: string;
-  file?: {
-    type: 'image' | 'video' | 'file';
-    url: string | SafeUrl;
-    name: string;
-  };
-}
+import {ChatMessageComponent} from './chat-message/chat-message.component';
+import {ChatMessage} from './models/message';
 
 @Component({
   selector: 'app-root',
@@ -30,14 +20,13 @@ interface ChatMessage {
     MatButton,
     MatIconButton,
     MatPrefix,
-    AttachmentButtonComponent
+    AttachmentButtonComponent,
+    ChatMessageComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  private readonly sanitizer = inject(DomSanitizer);
-
   public messages: ChatMessage[] = [];
   public newMessage = '';
   public currentUser = '';
@@ -58,7 +47,7 @@ export class AppComponent implements OnInit {
   handleImagePreviewLoaded(event: ImagePreviewLoadedEvent) {
     const attachment = this.attachments.find(a => a.id === event.imageId);
     if (attachment) {
-      attachment.imagePreviewUrl = event.imagePreviewUrl;
+      attachment.url = event.imagePreviewUrl;
     }
   }
 
@@ -91,18 +80,9 @@ export class AppComponent implements OnInit {
         sender: this.currentUser,
         content: this.newMessage.trim(),
         color: this.userColor,
+        attachments: this.attachments,
+        sent: new Date()
       };
-
-      if (this.selectedFile) {
-        const fileUrl = URL.createObjectURL(this.selectedFile);
-        const safeUrl = this.sanitizer.bypassSecurityTrustUrl(fileUrl);
-
-        message.file = {
-          type: this.selectedFileType as 'image' | 'video' | 'file',
-          url: safeUrl,
-          name: this.selectedFile.name
-        };
-      }
 
       this.messages.push(message);
       this.newMessage = '';

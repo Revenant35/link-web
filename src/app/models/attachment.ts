@@ -5,7 +5,7 @@ export type Attachment = {
   file: File;
   type: AttachmentType;
   isLoadingImagePreview?: boolean;
-  imagePreviewUrl?: string;
+  url?: string;
 }
 
 export type AttachmentsUploadedEvent = {
