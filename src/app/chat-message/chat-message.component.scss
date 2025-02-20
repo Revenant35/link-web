@@ -1,7 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+}
+
 .message {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   background: var(--mat-sys-surface-container);
+  width: 60%;
 }
 
 .message-sender {

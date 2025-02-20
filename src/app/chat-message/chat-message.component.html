@@ -1,14 +1,14 @@
-<div class="message">
-  <div class="message-sender" [style.color]="message().color">
-    {{ message().sender }}
+<div class="wrapper" [style.align-items]="isOwnMessage() ? 'flex-end' : 'flex-start'">
+  <div class="message">
+    <div class="message-sender" [style.color]="message().color">
+      {{ message().sender }}
+    </div>
+    <div class="message-content">
+      {{ message().content }}
+    </div>
   </div>
-  <div class="message-content">
-    {{ message().content }}
+
+  <div class="timestamp">
+    {{ message().sent | date: 'shortTime' }}
   </div>
 </div>
-
-<div class="timestamp">
-  {{ message().sent | date: 'shortTime' }}
-</div>
-
-

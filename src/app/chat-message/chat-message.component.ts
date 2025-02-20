@@ -11,5 +11,6 @@ import {DatePipe} from '@angular/common';
   styleUrl: './chat-message.component.scss'
 })
 export class ChatMessageComponent {
+  public isOwnMessage = input<boolean>(true);
   public message = input.required<ChatMessage>();
 }
