@@ -1,10 +1,12 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import {MatFormField} from '@angular/material/form-field';
+import {MatFormField, MatPrefix} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatInput} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {AttachmentButtonComponent} from './attachment-button/attachment-button.component';
+import {Attachment, AttachmentsUploadedEvent, ImagePreviewLoadedEvent} from './models/attachment';
 
 interface ChatMessage {
   id: number;
@@ -25,7 +27,10 @@ interface ChatMessage {
     MatIcon,
     FormsModule,
     MatInput,
-    MatButton
+    MatButton,
+    MatIconButton,
+    MatPrefix,
+    AttachmentButtonComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -37,12 +42,24 @@ export class AppComponent implements OnInit {
   public newMessage = '';
   public currentUser = '';
   public userColor = '';
+  public attachments: Attachment[] = [];
   public selectedFile: File | null = null;
   public selectedFileType: string = '';
   public selectedFilePreview: string | SafeUrl = '';
 
   ngOnInit() {
     this.generateUserIdentity();
+  }
+
+  handleAttachmentsUploaded(event: AttachmentsUploadedEvent) {
+    this.attachments.push(...event.attachments);
+  }
+
+  handleImagePreviewLoaded(event: ImagePreviewLoadedEvent) {
+    const attachment = this.attachments.find(a => a.id === event.imageId);
+    if (attachment) {
+      attachment.imagePreviewUrl = event.imagePreviewUrl;
+    }
   }
 
   generateUserIdentity() {
@@ -59,24 +76,6 @@ export class AppComponent implements OnInit {
   generateRandomColor() {
     const hue = Math.floor(Math.random() * 360);
     return `hsl(${hue}, 70%, 35%)`; // Using HSL for better readability
-  }
-
-  handleFileUpload(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.selectedFile = input.files[0];
-      this.selectedFileType = this.selectedFile.type.split('/')[0];
-
-      if (this.selectedFileType === 'image') {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            this.selectedFilePreview = e.target.result as string;
-          }
-        };
-        reader.readAsDataURL(this.selectedFile);
-      }
-    }
   }
 
   removeSelectedFile() {

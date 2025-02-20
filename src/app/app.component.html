@@ -1,66 +1,58 @@
 <div class="chat-container">
-  <div class="chat-messages" #scrollContainer>
-    <div
-      *ngFor="let message of messages"
-      class="message"
-    >
-      <div class="message-sender" [style.color]="message.color">
-        {{ message.sender }}
-      </div>
-      <div class="message-content">
-        {{ message.content }}
-      </div>
-      <div *ngIf="message.file" class="message-media">
-        <ng-container [ngSwitch]="message.file.type">
-          <img *ngSwitchCase="'image'" [src]="message.file.url" [alt]="message.file.name">
-          <video *ngSwitchCase="'video'" controls>
-            <source [src]="message.file.url" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <div *ngSwitchCase="'file'" class="message-file">
-            <mat-icon>attach_file</mat-icon>
-            <a [href]="message.file.url" [download]="message.file.name">
-              {{ message.file.name }}
-            </a>
+  <div class="chat-messages">
+    @for (message of messages; track message.id) {
+      <div class="message">
+        <div class="message-sender" [style.color]="message.color">
+          {{ message.sender }}
+        </div>
+        <div class="message-content">
+          {{ message.content }}
+        </div>
+        @if (message.file) {
+          <div class="message-media">
+            @switch (message.file.type) {
+              @case ('image') {
+                <img [src]="message.file.url" [alt]="message.file.name">
+              }
+              @case ('video') {
+                <video controls>
+                  <source [src]="message.file.url" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              }
+              @case ('file') {
+                <div class="message-file">
+                  <mat-icon>attach_file</mat-icon>
+                  <a [href]="message.file.url" [download]="message.file.name">
+                    {{ message.file.name }}
+                  </a>
+                </div>
+              }
+            }
           </div>
-        </ng-container>
+        }
       </div>
-    </div>
+    }
   </div>
 
   <div class="chat-input">
     <form class="input-form" (ngSubmit)="sendMessage()">
       <div class="message-input-container">
         <mat-form-field class="message-input">
-          <div matPrefix class="upload-buttons">
-            <button type="button" class="upload-button">
-              <label>
-                <mat-icon>image</mat-icon>
-                <input
-                  type="file"
-                  (change)="handleFileUpload($event)"
-                  accept="image/*,video/*"
-                >
-              </label>
-            </button>
-            <button type="button" class="upload-button">
-              <label>
-                <mat-icon>attach_file</mat-icon>
-                <input
-                  type="file"
-                  (change)="handleFileUpload($event)"
-                  accept=".pdf,.doc,.docx,.txt,.zip"
-                >
-              </label>
-            </button>
+          <div matPrefix>
+            <app-attachment-button
+              type="media"
+              (attachmentsUploaded)="handleAttachmentsUploaded($event)"
+              (imagePreviewLoaded)="handleImagePreviewLoaded($event)"
+            />
+            <app-attachment-button type="document"></app-attachment-button>
           </div>
           <input
             matInput
             [(ngModel)]="newMessage"
             name="message"
             placeholder="Type a message..."
-            (keyup.enter)="sendMessage()"
-          >
+            (keyup.enter)="sendMessage()" />
         </mat-form-field>
       </div>
 
@@ -68,18 +60,25 @@
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="!newMessage.trim() && !selectedFile"
-      >
+        [disabled]="!newMessage.trim() && !selectedFile">
         Send
       </button>
     </form>
 
-    <div *ngIf="selectedFile" class="upload-preview">
-      <ng-container [ngSwitch]="selectedFileType">
-        <img *ngSwitchCase="'image'" [src]="selectedFilePreview" alt="Upload preview">
-        <span *ngSwitchDefault>{{ selectedFile.name }}</span>
-      </ng-container>
-      <mat-icon class="remove-upload" (click)="removeSelectedFile()">close</mat-icon>
-    </div>
+    @for (attachment of attachments; track attachment.id) {
+      <div class="upload-preview">
+        @switch (attachment.type) {
+          @case ('image') {
+            <img [src]="attachment.imagePreviewUrl" alt="Upload preview">
+          }
+          @default {
+            <span>{{ attachment.name }}</span>
+          }
+        }
+        <button mat-icon-button (click)="removeSelectedFile()">
+          <mat-icon class="remove-upload">close</mat-icon>
+        </button>
+      </div>
+    }
   </div>
 </div>

@@ -52,30 +52,6 @@
   width: 100%;
 }
 
-.upload-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.upload-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-button:hover {
-  color: #0084ff;
-}
-
-.upload-button input[type="file"] {
-  display: none;
-}
-
 .material-icons {
   font-size: 24px;
 }

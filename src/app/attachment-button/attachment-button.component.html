@@ -1,0 +1,16 @@
+<button
+  mat-icon-button
+  class="attachment-button"
+  type="button"
+  (click)="mediaInput.click()"
+>
+  <mat-icon>{{icon()}}</mat-icon>
+</button>
+
+<input
+  #mediaInput
+  class="hidden"
+  type="file"
+  (change)="handleFileUpload($event)"
+  [accept]="fileFilters()"
+>
