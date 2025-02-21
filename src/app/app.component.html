@@ -5,50 +5,5 @@
     }
   </div>
 
-  <div class="chat-input">
-    <form class="input-form" (ngSubmit)="sendMessage()">
-      <div class="message-input-container">
-        <mat-form-field class="message-input">
-          <div matPrefix>
-            <app-attachment-button
-              type="media"
-              (attachmentsUploaded)="handleAttachmentsUploaded($event)"
-              (imagePreviewLoaded)="handleImagePreviewLoaded($event)"
-            />
-            <app-attachment-button type="document"></app-attachment-button>
-          </div>
-          <input
-            matInput
-            [(ngModel)]="newMessage"
-            name="message"
-            placeholder="Type a message..."
-            (keyup.enter)="sendMessage()" />
-        </mat-form-field>
-      </div>
-
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!newMessage.trim() && !selectedFile">
-        Send
-      </button>
-    </form>
-
-    @for (attachment of attachments; track attachment.id) {
-      <div class="upload-preview">
-        @switch (attachment.type) {
-          @case ('image') {
-            <img [src]="attachment.url" alt="Upload preview">
-          }
-          @default {
-            <span>{{ attachment.name }}</span>
-          }
-        }
-        <button mat-icon-button (click)="removeSelectedFile()">
-          <mat-icon class="remove-upload">close</mat-icon>
-        </button>
-      </div>
-    }
-  </div>
+  <app-chat-input (messageSubmitted)="handleMessageSubmitted($event)" />
 </div>

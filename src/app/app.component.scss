@@ -14,30 +14,6 @@
   padding: 1rem;
 }
 
-.chat-input {
-  padding: 1rem;
-  background: var(--mat-sys-primary-container);
-  border-radius: 8px;
-}
-
-.input-form {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.message-input-container {
-  flex: 1;
-}
-
-.message-input {
-  width: 100%;
-}
-
-.material-icons {
-  font-size: 24px;
-}
-
 .message-media {
   margin-top: 0.5rem;
   max-width: 100%;

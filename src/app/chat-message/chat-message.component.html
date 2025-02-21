@@ -1,7 +1,7 @@
 <div class="wrapper" [style.align-items]="isOwnMessage() ? 'flex-end' : 'flex-start'">
   <div class="message">
-    <div class="message-sender" [style.color]="message().color">
-      {{ message().sender }}
+    <div class="message-sender" [style.color]="message().sender.color">
+      {{ message().sender | username }}
     </div>
     <div class="message-content">
       {{ message().content }}

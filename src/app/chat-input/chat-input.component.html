@@ -1,0 +1,35 @@
+<form
+  class="chat-box"
+  (ngSubmit)="submitMessage()">
+  <mat-form-field
+    class="chat-box-input"
+    subscriptSizing="dynamic">
+    <div matPrefix>
+      <app-attachment-button
+        type="media"
+        (attachmentsUploaded)="handleAttachmentsUploaded($event)"
+        (imagePreviewLoaded)="handleImagePreviewLoaded($event)"
+      />
+      <app-attachment-button
+        type="document"
+        (attachmentsUploaded)="handleAttachmentsUploaded($event)"
+      />
+    </div>
+    <input
+      matInput
+      name="message"
+      [(ngModel)]="message"
+      placeholder="Type a message..."
+    />
+  </mat-form-field>
+
+  <button
+    class="chat-box-submit-button"
+    mat-icon-button
+    color="primary"
+    type="submit"
+    [disabled]="!canSubmit()"
+  >
+    <mat-icon>send</mat-icon>
+  </button>
+</form>
